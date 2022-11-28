@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
-import Layout from '../components/Layout';
 import Router from 'next/router';
-import { usePost } from '@zenstackhq/runtime/hooks';
-import { useSession } from 'next-auth/react';
+import { usePost } from '@zenstackhq/runtime/client';
 
 const Draft: React.FC = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
-    const { data: session, status } = useSession();
     const { create } = usePost();
-
-    if (status === 'loading') {
-        return <p>Loading ...</p>;
-    } else if (status === 'unauthenticated') {
-        return <p>Unauthorized</p>;
-    }
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -24,7 +15,6 @@ const Draft: React.FC = () => {
                 data: {
                     title,
                     content,
-                    author: { connect: { id: session!.user.id } },
                 },
             });
             await Router.push('/drafts');
@@ -35,7 +25,7 @@ const Draft: React.FC = () => {
     };
 
     return (
-        <Layout>
+        <>
             <div>
                 <form onSubmit={submitData}>
                     <h1>Create Draft</h1>
@@ -96,7 +86,7 @@ const Draft: React.FC = () => {
                     margin-left: 1rem;
                 }
             `}</style>
-        </Layout>
+        </>
     );
 };
 

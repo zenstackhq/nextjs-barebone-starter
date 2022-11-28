@@ -4,31 +4,6 @@ datasource db {
 }
 
 /*
- * User model
- */
-model User {
-    id String @id @default(cuid())
-    email String @unique @email
-    emailVerified DateTime?
-
-    // @password indicates the field is a password and its
-    // value should be hashed (with bcrypt) before storing
-    // @omit indicates the field should not be returned on read
-    password String @password @omit @length(8, 16)
-    name String?
-    posts Post[]
-
-    // everybody can signup
-    @@allow('create', true)
-
-    // can be read by self
-    @@allow('read', auth() == this)
-
-    // can only be updated and deleted by self
-    @@allow('update,delete', auth() == this) 
-}
-
-/*
  * Post model
  */
 model Post {
@@ -38,12 +13,7 @@ model Post {
     title String @length(1, 256)
     content String
     published Boolean @default(false)
-    author User? @relation(fields: [authorId], references: [id])
-    authorId String?
 
-    // must signin to CRUD any post
-    @@deny('all', auth() == null)
-
-    // allow CRUD by author
-    @@allow('all', author == auth())
+    // allow all operations
+    @@allow('all', true)
 }

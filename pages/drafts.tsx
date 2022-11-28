@@ -1,25 +1,17 @@
-import { usePost } from '@zenstackhq/runtime/hooks';
-import { useSession } from 'next-auth/react';
+import { usePost } from '@zenstackhq/runtime/client';
 import React from 'react';
-import Layout from '../components/Layout';
-import Post, { PostProps } from '../components/Post';
+import Post from '../components/Post';
 
 const Drafts: React.FC = () => {
-    const { data: session, status } = useSession();
     const { find } = usePost();
     const { data: posts } = find({
-        include: { author: true },
         where: { published: false },
     });
 
-    if (status === 'loading') {
-        return <p>Loading ...</p>;
-    }
-
     return (
-        <Layout>
+        <>
             <div className="page">
-                {session?.user ? <h1>Drafts</h1> : <h1>Please signin first</h1>}
+                <h1>Drafts</h1>
                 <main>
                     {posts?.map((post) => (
                         <div key={post.id} className="post">
@@ -43,7 +35,7 @@ const Drafts: React.FC = () => {
                     margin-top: 2rem;
                 }
             `}</style>
-        </Layout>
+        </>
     );
 };
 

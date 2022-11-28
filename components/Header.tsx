@@ -1,14 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
 
 const Header: React.FC = () => {
     const router = useRouter();
     const isActive: (pathname: string) => boolean = (pathname) =>
         router.pathname === pathname;
-
-    const { status } = useSession();
 
     return (
         <nav>
@@ -23,14 +20,6 @@ const Header: React.FC = () => {
                 </Link>
             </div>
             <div className="right">
-                {status === 'authenticated' && (
-                    <a onClick={() => signOut({ callbackUrl: '/' })}>Signout</a>
-                )}
-                {status === 'unauthenticated' && (
-                    <Link href="/signin">
-                        <a>Signin</a>
-                    </Link>
-                )}
                 <Link href="/create">
                     <a data-active={isActive('/create')}>+ Create draft</a>
                 </Link>
